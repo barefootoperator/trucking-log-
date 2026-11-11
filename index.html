@@ -1,0 +1,187 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royal Excavation Truck Log</title>
+<style>
+:root{--bg:#f4f2ee;--card:#fff;--ink:#1d1d1b;--mut:#6b6a66;--line:#dcd9d2;--acc:#c8541a}
+@media(prefers-color-scheme:dark){:root{--bg:#161614;--card:#222220;--ink:#f1efe9;--mut:#9d9a92;--line:#3a3935;--acc:#e8703a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:16px;max-width:560px;margin:0 auto}
+h1{font-size:20px;margin:6px 0 14px}
+h2{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 10px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--mut);margin:0 0 4px}
+input,select{width:100%;min-width:0;height:48px;padding:0 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:17px}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.f .w{grid-column:span 2}
+button{height:48px;padding:0 16px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:16px;cursor:pointer}
+.done{width:100%;margin-top:14px;background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600;font-size:18px;height:54px}
+.row{display:grid;grid-template-columns:58px minmax(0,1fr) 30px 58px 36px;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .x{height:36px;width:36px;padding:0;color:var(--mut)}
+.row b{text-align:right}
+.mut{color:var(--mut);font-size:14px}
+.tr{display:grid;grid-template-columns:minmax(0,1fr) 44px 54px 60px;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.tr.hd{border-top:0;font-size:12px;color:var(--mut)}
+.tr span:nth-child(n+2){text-align:right}
+.tr.tot{font-weight:700;border-top:2px solid var(--ink)}
+.big{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.big div{background:var(--bg);border-radius:12px;padding:12px 4px;text-align:center}
+.big b{display:block;font-size:26px;color:var(--acc)}
+.under{color:#b7791f}.over{color:#c0392b}.ok{color:#2f855a}
+.big span{font-size:12px;color:var(--mut)}
+.edit{display:grid;grid-template-columns:minmax(0,1fr) 70px 44px;gap:8px;margin-top:8px}
+.edit .x{height:44px;width:44px;padding:0;font-size:20px;color:var(--mut)}
+.edit input{height:44px;font-size:16px}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts button{flex:1}
+</style>
+</head>
+<body>
+<h1>Truck log</h1>
+<noscript><div class="card"><b>This page needs to open in a web browser.</b><br>Save the file, then open it in Safari or Chrome. Opening it from a text or email preview won't work.</div></noscript>
+
+<div class="card">
+  <h2>New load</h2>
+  <div class="f">
+    <div class="w"><label for="truck">Truck</label><select id="truck"><option value="0" selected="">Cccavic #31</option><option value="1">Richard #28</option><option value="2">Lucini #29</option><option value="3">Newcomb #2</option><option value="4">Meadowbrook mulch #30</option><option value="5">BRS #10</option></select></div>
+    <div><label for="scoops">Scoops loaded</label><input id="scoops" type="number" inputmode="numeric" min="0" placeholder="0" value=""></div>
+    <div><label for="left">Time left</label><input id="left" type="time"></div>
+  </div>
+  <button class="done" id="done">Done</button>
+  <div class="mut" id="err" style="margin-top:8px;color:#c0392b"></div>
+</div>
+
+<div class="card">
+  <h2>Loads today</h2>
+  <div id="log"><div class="row"><span class="mut">--</span><span>Meadowbrook mulch #30</span><b>10</b><span class="mut ok">30 yd</span><button class="x" aria-label="Remove this load">×</button></div><div class="row"><span class="mut">--</span><span>BRS #10</span><b>9</b><span class="mut under">27 yd</span><button class="x" aria-label="Remove this load">×</button></div><div class="row"><span class="mut">--</span><span>Newcomb #2</span><b>9</b><span class="mut under">27 yd</span><button class="x" aria-label="Remove this load">×</button></div><div class="row"><span class="mut">--</span><span>Lucini #29</span><b>8</b><span class="mut under">24 yd</span><button class="x" aria-label="Remove this load">×</button></div><div class="row"><span class="mut">--</span><span>Richard #28</span><b>10</b><span class="mut ok">30 yd</span><button class="x" aria-label="Remove this load">×</button></div><div class="row"><span class="mut">--</span><span>Cccavic #31</span><b>10</b><span class="mut ok">30 yd</span><button class="x" aria-label="Remove this load">×</button></div></div>
+</div>
+
+<div class="card">
+  <h2>Day total</h2>
+  <div class="big"><div><b id="tl">6</b><span>Loads</span></div><div><b id="ts">56</b><span>Scoops</span></div><div><b id="ty">168</b><span>Cubic yards</span></div></div>
+  <div id="by"><div class="tr hd"><span>Truck</span><span>Loads</span><span>Scoops</span><span>Yards</span></div><div class="tr"><span>Cccavic #31</span><span>1</span><span>10</span><span>30</span></div><div class="tr"><span>Richard #28</span><span>1</span><span>10</span><span>30</span></div><div class="tr"><span>Lucini #29</span><span>1</span><span>8</span><span>24</span></div><div class="tr"><span>Newcomb #2</span><span>1</span><span>9</span><span>27</span></div><div class="tr"><span>BRS #10</span><span>1</span><span>9</span><span>27</span></div><div class="tr"><span>Meadowbrook mulch #30</span><span>1</span><span>10</span><span>30</span></div><div class="tr tot"><span>Total</span><span>6</span><span>56</span><span>168</span></div></div>
+  <div class="acts"><button id="copy">Copy summary</button><button id="newday">New day</button></div>
+  <div class="mut" id="msg" style="white-space:pre-wrap;margin-top:8px"></div>
+</div>
+
+<div class="card">
+  <h2>Settings</h2>
+  <div class="f" style="margin:0 0 14px">
+    <div><label for="cy">Yards per scoop</label><input id="cy" type="number" inputmode="decimal" min="0" step="0.1" value="3"></div>
+    <div><label>Trailer range (yards)</label><input value="28 to 30" disabled=""></div>
+  </div>
+  <h2>Trucks</h2>
+  <div id="trucks"><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="Cccavic"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="31"><button class="x" aria-label="Remove truck">×</button></div><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="Richard"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="28"><button class="x" aria-label="Remove truck">×</button></div><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="Lucini"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="29"><button class="x" aria-label="Remove truck">×</button></div><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="Newcomb"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="2"><button class="x" aria-label="Remove truck">×</button></div><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="Meadowbrook mulch"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="30"><button class="x" aria-label="Remove truck">×</button></div><div class="edit"><input type="text" placeholder="Truck name" aria-label="Truck name" value="BRS"><input type="text" placeholder="#" inputmode="numeric" aria-label="Truck number" value="10"><button class="x" aria-label="Remove truck">×</button></div></div>
+  <div class="acts"><button id="addt">+ Add truck</button></div>
+</div>
+
+<script>
+var KEY="rx-truck-log-v3";
+var D={trucks:[["Cccavic","31"],["Richard","28"],["Lucini","29"],["Newcomb","2"],["Meadowbrook mulch","30"],["BRS","10"]],log:[{name:"Cccavic",num:"31",scoops:10,time:""},{name:"Richard",num:"28",scoops:10,time:""},{name:"Lucini",num:"29",scoops:8,time:""},{name:"Newcomb",num:"2",scoops:9,time:""},{name:"BRS",num:"10",scoops:9,time:""},{name:"Meadowbrook mulch",num:"30",scoops:10,time:""}],cy:3};
+try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.trucks&&s.log)D=s}catch(e){}
+if(!(D.cy>0))D.cy=3;
+function yd(n){return Math.round(n*D.cy*10)/10}
+function cls(y){return y<28?"under":(y>30?"over":"ok")}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+function $(id){return document.getElementById(id)}
+function nowHM(){var d=new Date(),h=d.getHours(),m=d.getMinutes();return(h<10?"0":"")+h+":"+(m<10?"0":"")+m}
+function tname(t){return t[0]+(t[1]?" #"+t[1]:"")}
+function h12(v){if(!v)return"--";var p=v.split(":"),h=+p[0],ap=h>=12?"pm":"am";h=h%12||12;return h+":"+p[1]+ap}
+function el(tag,txt,cls){var e=document.createElement(tag);if(txt!=null)e.textContent=txt;if(cls)e.className=cls;return e}
+
+function drawSelect(){
+ var sel=$("truck"),cur=sel.value;
+ sel.innerHTML="";
+ D.trucks.forEach(function(t,i){var o=el("option",tname(t));o.value=i;sel.appendChild(o)});
+ if(cur!==""&&D.trucks[cur])sel.value=cur;
+}
+function drawTrucks(){
+ var box=$("trucks");box.innerHTML="";
+ D.trucks.forEach(function(t,i){
+  var w=el("div",null,"edit");
+  var a=el("input");a.type="text";a.value=t[0];a.placeholder="Truck name";a.setAttribute("aria-label","Truck name");
+  var b=el("input");b.type="text";b.value=t[1];b.placeholder="#";b.inputMode="numeric";b.setAttribute("aria-label","Truck number");
+  a.addEventListener("input",function(){D.trucks[i][0]=a.value;save();drawSelect()});
+  b.addEventListener("input",function(){D.trucks[i][1]=b.value;save();drawSelect()});
+  var r=el("button","×","x");r.setAttribute("aria-label","Remove truck");
+  r.addEventListener("click",function(){D.trucks.splice(i,1);save();drawTrucks();drawSelect()});
+  w.appendChild(a);w.appendChild(b);w.appendChild(r);box.appendChild(w);
+ });
+}
+function drawLog(){
+ var box=$("log");box.innerHTML="";
+ if(!D.log.length){box.appendChild(el("div","No loads yet. Fill in the form above and hit Done.","mut"));return}
+ D.log.slice().reverse().forEach(function(r,k){
+  var idx=D.log.length-1-k;
+  var row=el("div",null,"row");
+  row.appendChild(el("span",h12(r.time),"mut"));
+  row.appendChild(el("span",r.name+(r.num?" #"+r.num:"")));
+  row.appendChild(el("b",r.scoops));
+  var y=yd(r.scoops);
+  row.appendChild(el("span",y+" yd","mut "+cls(y)));
+  var x=el("button","×","x");x.setAttribute("aria-label","Remove this load");
+  x.addEventListener("click",function(){D.log.splice(idx,1);save();drawAll()});
+  row.appendChild(x);
+  box.appendChild(row);
+ });
+}
+function totals(){
+ var loads=D.log.length,sc=0,by={},order=[];
+ D.log.forEach(function(r){
+  sc+=r.scoops;
+  var k=r.name+"|"+r.num;
+  if(!by[k]){by[k]={name:r.name+(r.num?" #"+r.num:""),n:0,s:0};order.push(k)}
+  by[k].n++;by[k].s+=r.scoops;
+ });
+ $("tl").textContent=loads;$("ts").textContent=sc;$("ty").textContent=yd(sc);
+ var box=$("by");box.innerHTML="";
+ if(!loads)return;
+ var hd=el("div",null,"tr hd");hd.appendChild(el("span","Truck"));hd.appendChild(el("span","Loads"));hd.appendChild(el("span","Scoops"));hd.appendChild(el("span","Yards"));box.appendChild(hd);
+ order.forEach(function(k){
+  var r=el("div",null,"tr");r.appendChild(el("span",by[k].name));r.appendChild(el("span",by[k].n));r.appendChild(el("span",by[k].s));r.appendChild(el("span",yd(by[k].s)));box.appendChild(r);
+ });
+ var t=el("div",null,"tr tot");t.appendChild(el("span","Total"));t.appendChild(el("span",loads));t.appendChild(el("span",sc));t.appendChild(el("span",yd(sc)));box.appendChild(t);
+ return{by:by,order:order,loads:loads,sc:sc};
+}
+function drawAll(){drawLog();totals()}
+
+$("done").addEventListener("click",function(){
+ var i=$("truck").value,n=$("scoops").value,err=$("err");
+ if(i===""||!D.trucks[i]){err.textContent="Add a truck in the Trucks section first.";return}
+ if(n===""||+n<0){err.textContent="Enter how many scoops were loaded.";$("scoops").focus();return}
+ err.textContent="";
+ var t=D.trucks[i];
+ D.log.push({name:t[0],num:t[1],scoops:Math.round(+n),time:$("left").value||nowHM()});
+ save();
+ $("scoops").value="";$("left").value=nowHM();
+ drawAll();
+ $("msg").textContent="";
+});
+$("scoops").addEventListener("input",function(){$("err").textContent=""});
+$("addt").addEventListener("click",function(){D.trucks.push(["",""]);save();drawTrucks();drawSelect();var ins=document.querySelectorAll("#trucks .edit");ins[ins.length-1].firstChild.focus()});
+$("copy").addEventListener("click",function(){
+ var t=totals(),msg=$("msg");
+ if(!t){msg.textContent="No loads to copy yet.";return}
+ var ln=["Truck log "+new Date().toLocaleDateString()];
+ t.order.forEach(function(k){ln.push(t.by[k].name+": "+t.by[k].n+" loads, "+t.by[k].s+" scoops, "+yd(t.by[k].s)+" yd")});
+ ln.push("Total: "+t.loads+" loads, "+t.sc+" scoops, "+yd(t.sc)+" yd");
+ var txt=ln.join("\n");
+ msg.textContent=txt;
+ try{navigator.clipboard.writeText(txt)}catch(e){}
+});
+var arm=false;
+$("newday").addEventListener("click",function(){
+ var b=$("newday");
+ if(!arm){arm=true;b.textContent="Tap again to clear";setTimeout(function(){arm=false;b.textContent="New day"},4000);return}
+ arm=false;b.textContent="New day";D.log=[];save();drawAll();$("msg").textContent="Cleared for a new day.";
+});
+$("left").value=nowHM();
+$("cy").value=D.cy;
+$("cy").addEventListener("input",function(){var v=parseFloat($("cy").value);if(v>0){D.cy=v;save();drawAll()}});
+drawSelect();drawTrucks();drawAll();
+</script>
+
+
+</body></html>
